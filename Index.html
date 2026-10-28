@@ -1,0 +1,73 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Crochet Counter</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #fff0f5;
+  color: #a83e68;
+  text-align: center;
+  padding: 25px 12px;
+}
+.card {
+  background: white;
+  border-radius: 25px;
+  padding: 25px 15px;
+  max-width: 340px;
+  margin: 25px auto;
+  box-shadow: 0 5px 18px #e9b8cc;
+}
+h1 { font-size: 27px; }
+#count {
+  font-size: 75px;
+  margin: 25px;
+  font-weight: bold;
+}
+button {
+  border: none;
+  border-radius: 16px;
+  padding: 15px 23px;
+  margin: 6px;
+  font-size: 20px;
+  background: #f5b5ce;
+  color: #813052;
+}
+.reset { font-size: 15px; background: #ffe1eb; }
+</style>
+</head>
+<body>
+<div class="card">
+<h1>🧶 My Crochet Counter 🎀</h1>
+<p>Keep counting your lovely rounds!</p>
+<div id="count">0</div>
+<button onclick="change(1)">＋</button>
+<button onclick="change(-1)">−</button>
+<br>
+<button class="reset" onclick="resetCount()">↻ Reset</button>
+<p>♡ Handmade with love ♡</p>
+</div>
+<script>
+let rounds = Number(localStorage.getItem('crochetRounds')) || 0;
+function show() {
+  document.getElementById('count').textContent = rounds;
+}
+function change(n) {
+  rounds = Math.max(0, rounds + n);
+  localStorage.setItem('crochetRounds', rounds);
+  show();
+}
+function resetCount() {
+  if (confirm('Reset your round count?')) {
+    rounds = 0;
+    localStorage.setItem('crochetRounds', rounds);
+    show();
+  }
+}
+show();
+</script>
+</body>
+</html>
