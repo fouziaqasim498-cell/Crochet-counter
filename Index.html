@@ -4,70 +4,95 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Crochet Counter</title>
+<meta name="theme-color" content="#ffe4ef">
+<title>My Crochet Counter 🎀</title>
 <style>
-body {
-  font-family: Arial, sans-serif;
-  background: #fff0f5;
-  color: #a83e68;
-  text-align: center;
-  padding: 25px 12px;
+*{box-sizing:border-box}
+body{
+ margin:0;min-height:100vh;display:flex;align-items:center;
+ justify-content:center;padding:20px;
+ background:linear-gradient(145deg,#fff4f8,#ffd9e9);
+ font-family:Arial,sans-serif;color:#873e61;text-align:center
 }
-.card {
-  background: white;
-  border-radius: 25px;
-  padding: 25px 15px;
-  max-width: 340px;
-  margin: 25px auto;
-  box-shadow: 0 5px 18px #e9b8cc;
+.card{
+ width:100%;max-width:380px;background:#fffafd;
+ border:2px solid #ffc1dc;border-radius:28px;padding:25px 20px;
+ box-shadow:0 10px 30px #d98bab35
 }
-h1 { font-size: 27px; }
-#count {
-  font-size: 75px;
-  margin: 25px;
-  font-weight: bold;
+h1{font-size:27px;margin:5px 0 8px}
+p{color:#ad6a89}
+input{
+ width:100%;padding:13px;border:1px solid #f3b4d0;
+ border-radius:14px;font-size:16px;text-align:center;margin:8px 0;
+ background:white;color:#873e61
 }
-button {
-  border: none;
-  border-radius: 16px;
-  padding: 15px 23px;
-  margin: 6px;
-  font-size: 20px;
-  background: #f5b5ce;
-  color: #813052;
+.count{font-size:76px;font-weight:bold;margin:18px 0;color:#e45b98}
+button{
+ border:0;border-radius:15px;padding:13px 18px;
+ font-size:16px;font-weight:bold;cursor:pointer;margin:5px;
+ background:#ffd0e4;color:#873e61
 }
-.reset { font-size: 15px; background: #ffe1eb; }
+.plus{background:#e85d9b;color:white;font-size:23px;padding:17px 35px}
+.reset{background:#fff0f6}
+.small{font-size:13px}
+.progress{height:10px;background:#ffe0ed;border-radius:20px;overflow:hidden}
+#bar{height:100%;width:0;background:#e85d9b;transition:.2s}
 </style>
 </head>
 <body>
 <div class="card">
-<h1>🧶 My Crochet Counter 🎀</h1>
-<p>Keep counting your lovely rounds!</p>
-<div id="count">0</div>
-<button onclick="change(1)">＋</button>
-<button onclick="change(-1)">−</button>
-<br>
-<button class="reset" onclick="resetCount()">↻ Reset</button>
-<p>♡ Handmade with love ♡</p>
+<h1>𐙚 My Crochet Counter 🧶</h1>
+<p>♡ Every stitch counts ♡</p>
+<input id="project" placeholder="Project name 🎀">
+<input id="target" type="number" min="1" placeholder="Target rounds (optional)">
+<p>ROUND</p>
+<div class="count" id="count">0</div>
+<button class="plus" onclick="change(1)">＋ Round</button>
+<div>
+<button onclick="change(-1)">− 1</button>
+<button class="reset" onclick="resetCount()">Reset</button>
+</div>
+<p id="progressText">Let's start crocheting! 💗</p>
+<div class="progress"><div id="bar"></div></div>
+<p class="small">Your progress saves automatically ♡</p>
+<button class="reset" onclick="newProject()">＋ New Project</button>
 </div>
 <script>
-let rounds = Number(localStorage.getItem('crochetRounds')) || 0;
-function show() {
-  document.getElementById('count').textContent = rounds;
+let data;
+try{data=JSON.parse(localStorage.getItem('crochetData'))||{}}
+catch(e){data={}}
+let round=data.round||0;
+document.getElementById('project').value=data.project||'';
+document.getElementById('target').value=data.target||'';
+function save(){
+ data={round:round,project:document.getElementById('project').value,
+ target:document.getElementById('target').value};
+ try{localStorage.setItem('crochetData',JSON.stringify(data))}catch(e){}
+ render();
 }
-function change(n) {
-  rounds = Math.max(0, rounds + n);
-  localStorage.setItem('crochetRounds', rounds);
-  show();
+function render(){
+ document.getElementById('count').textContent=round;
+ let t=Number(document.getElementById('target').value)||0;
+ let pct=t?Math.min(100,round/t*100):0;
+ document.getElementById('bar').style.width=pct+'%';
+ document.getElementById('progressText').textContent=
+ t?round+' / '+t+' rounds • '+Math.round(pct)+'% 💗':'Keep going, you are doing great! 🎀';
 }
-function resetCount() {
-  if (confirm('Reset your round count?')) {
-    rounds = 0;
-    localStorage.setItem('crochetRounds', rounds);
-    show();
-  }
+function change(n){round=Math.max(0,round+n);save()}
+function resetCount(){
+ if(confirm('Reset this round count?')){round=0;save()}
 }
-show();
+function newProject(){
+ if(confirm('Start a new project? Your current count will reset.')){
+ round=0;
+ document.getElementById('project').value='';
+ document.getElementById('target').value='';
+ save();
+ }
+}
+document.getElementById('project').addEventListener('input',save);
+document.getElementById('target').addEventListener('input',save);
+render();
 </script>
 </body>
 </html>
